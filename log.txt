@@ -1,0 +1,255 @@
+
+
+
+
+Harmonic parameterization .. >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+The scaling factor 0.7907637840009999 will be used
+
+The following atom-atom interactions has been found to be unstable,
+so the associated force constants will not be provided
+2 3
+2 4
+2 5
+3 4
+3 5
+4 5
+1 6
+1 7
+6 7
+5 8
+5 9
+8 9
+7 10
+7 11
+7 12
+10 11
+10 12
+11 12
+
+=======================
+Bond (atom1, atom2, force constant)
+1 	 2 	 301.62
+1 	 3 	 294.78
+1 	 4 	 293.15
+1 	 5 	 193.8
+5 	 6 	 612.16
+5 	 7 	 324.57
+7 	 8 	 412.93
+7 	 9 	 228.79
+9 	 10 	 291.55
+9 	 11 	 294.08
+9 	 12 	 302.96
+
+=====================
+Urey-Bradley (atom1, atom2, force constant)
+
+
+==============================
+angles (atom1   atom2   atom3   force constant)
+2 	 1 	 3 	 23.69
+2 	 1 	 4 	 19.97
+2 	 1 	 5 	 38.99
+3 	 1 	 4 	 17.75
+3 	 1 	 5 	 38.76
+4 	 1 	 5 	 42.01
+1 	 5 	 6 	 56.6
+1 	 5 	 7 	 71.43
+6 	 5 	 7 	 55.91
+5 	 7 	 8 	 27.37
+5 	 7 	 9 	 65.97
+8 	 7 	 9 	 26.55
+7 	 9 	 10 	 37.5
+7 	 9 	 11 	 34.94
+7 	 9 	 12 	 34.6
+10 	 9 	 11 	 26.08
+10 	 9 	 12 	 28.14
+11 	 9 	 12 	 28.25
+
+
+======================================
+Impropers (atom1   atom2   atom3   atom4   force constant)
+5 	 1 	 6 	 7 	 94.1
+======================================
+
+The following bonds were forund to be equivalent
+[[1, 2], [1, 3], [1, 4]]
+[[9, 10], [9, 11], [9, 12]]
+
+The following Urey-Bradley interactions were forund to be equivalent
+
+The following angles were forund to be equivalent
+[[2, 1, 3], [2, 1, 4], [3, 1, 4]]
+[[2, 1, 5], [3, 1, 5], [4, 1, 5]]
+[[7, 9, 10], [7, 9, 11], [7, 9, 12]]
+[[10, 9, 11], [10, 9, 12], [11, 9, 12]]
+
+The following improper angles were forund to be equivalent
+
+The equivalences will be considered in the output parameter file
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> .. Harmonic parameterization is completed successfully 
+
+
+
+
+
+
+
+
+_____________________________________________________________________
+A copy of the configuration file for the run number  (1)
+fc 
+fc 
+gc 1 2 3 4 0.0
+gc 9 10 11 12 0.0
+ec 4 10
+kc 8
+fp 2 1 5 6 2
+fp 3 1 5 6 1 
+repeat 
+phases  1 
+kmax  5
+maxenergy  15 
+nsteps  5000
+weight c 8 2
+_____________________________________________________________________
+
+
+
+
+
+
+Charge fitting .. >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+STEP: extracting the input data for RESP
+
+The program equivalencing scheme has detected the following equivalent charge centers 
+[2, 3, 4]
+[10, 11, 12]
+35587 electrostatic potential points has been deteted
+
+STEP: input data processing 
+
+STEP: first stage fitting
+resp fitting has converged in   3  iterations
+
+STEPsecond stage fitting
+resp fitting has converged in   2  iterations
+
+According to the  the configuration file the program has modified the equivalences to be 
+[2, 3, 4, 10, 11, 12]
+
+With program modification scheme, the frozen atoms were corrected to be 
+{6: -0.33464527597439714, 7: -0.1499985262702852, 8: 0.14606345870282958}
+and the frozen group charge were corrected to be 
+[1, 2, 3, 4, 0.0]
+[9, 10, 11, 12, 0.0]
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0.0]
+
+The final charges 
+1 -0.24167160507647037
+2 0.08055720175330829
+3 0.08055720175330829
+4 0.08055720175330829
+5 0.08055720175330829
+6 0.08055720175330829
+7 0.08055720175330829
+8 0.3385803438927219
+9 -0.33464527597439714
+10 -0.1499985262702852
+11 0.14606345870282958
+12 -0.24167160565507234
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> .. Charge fitting ended successfully
+
+
+
+
+
+
+
+
+Torsional Parameterization .. >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+['nma1.scn', 'nma2.scn', 'nma3.scn']
+
+You have requested the alternative way for torsional parameterization 
+but you did not provide valid entries in the configuration file (.cfg)
+the PES files will be used if provided, otherwise the process will be halted
+
+The following weights are in effect
+[0.10928961748633881, 0.10928961748633881, 0.10928961748633881, 0.10928961748633881, 0.054644808743169404, 0.054644808743169404, 0.005464480874316941, 0.005464480874316941, 0.005464480874316941, 0.10928961748633881, 0.10928961748633881, 0.10928961748633881, 0.10928961748633881]
+
+The force constants will range between 0 and  5.0
+The phase shifte will range between -180 and 180 degrees 
+
+The equivalencing sheme has detected the following torsional angles to be equivalent
+[[2, 1, 5, 6], [3, 1, 5, 6], [4, 1, 5, 6]]
+[[2, 1, 5, 7], [3, 1, 5, 7], [4, 1, 5, 7]]
+[[5, 7, 9, 10], [5, 7, 9, 11], [5, 7, 9, 12]]
+[[8, 7, 9, 10], [8, 7, 9, 11], [8, 7, 9, 12]]
+1 3
+
+To consider the frozen torsionals and periodicities entries in the configuration file,
+the following equivalent torsionals will be in effect
+[[2, 1, 5, 7], [3, 1, 5, 7], [4, 1, 5, 7]]
+[[5, 7, 9, 10], [5, 7, 9, 11], [5, 7, 9, 12]]
+[[8, 7, 9, 10], [8, 7, 9, 11], [8, 7, 9, 12]]
+
+The following periodicities will be in effect
+[2, 1, 5, 6, 2]
+[2, 1, 5, 7, 1, 3, 6]
+[3, 1, 5, 6, 1]
+[4, 1, 5, 6, 1, 3, 6]
+[1, 5, 7, 8, 2]
+[1, 5, 7, 9, 2]
+[6, 5, 7, 8, 2]
+[6, 5, 7, 9, 2]
+[5, 7, 9, 10, 1, 3, 6]
+[8, 7, 9, 10, 1, 3, 6]
+
+The anneling parameters
+    The starting temperature = 2.8036732520571284 K
+    The final temperature = 0.14476482730108395 K
+    The cooling scheme: temp(n+1) =  temp(n)* 0.9705085148892776
+
+
+============================================
+Trial torsional fitting number 1
+RMSE =  1.762441098190254
+RMSE =  1.5405055542685238
+RMSE =  1.3837543845695046
+RMSE =  1.3640958719316667
+RMSE =  1.3243716209593426
+RMSE =  1.200239224998175
+RMSE =  0.7193009408645622
+RMSE =  0.6507910761916129
+RMSE =  0.6296087828046777
+RMSE =  0.4984572141268429
+RMSE =  0.43191109974813574
+RMSE =  0.26065096711183167
+RMSE =  0.26065096711183167
+
+The Quantum mechanical and the Molecular mechanical energies 
+  0             0.0 0.2414278633183784
+  1 0.21617685050708715             0.0
+  2 1.6916387622165274 2.2655990329864153
+  3 4.522269110307391 4.7407822644952375
+  4 8.30307358619987 8.484084588710687
+  5 12.401523117903643 12.1418801171736
+  6 16.181386330316336 14.049635944811754
+  7 19.257937455514096 13.932996521985203
+  8 20.925605373909104 12.249525353920248
+  9 3.834958502605567 3.817715716761313
+ 10 2.587972617804264 2.5924057607806077
+ 11 2.2310454986065404 2.0005871715949297
+ 12 2.3399810610132956 2.3995826081127234
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> .. Torsional parameterization ended successfully 
+
+
+
+
+
+
