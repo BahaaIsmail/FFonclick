@@ -3,12 +3,28 @@ from os import walk ,getcwd , system
 from functions import *
 import sys
 
-#hessf = sys.argv[1]
-hessf = 'nma.fch'
+hessf = sys.argv[1]
+#hessf = 'nma.fch'
 
 
-print ('\n\nHarmonic parameterization .. >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n')
+print ( '\n\n' )
+print ( '__________________________________________________________________________________' )
+print ( 'Harmonic Parameterization ________________________________________________________' )
 
+
+
+print ( '\nThe Hessian file: {} was detected\n'.format(hessf) )
+
+
+
+cfg = 0 
+path = getcwd()
+for root , dirs ,files in walk(path) : 
+    for f in files : 
+        if f == 'cfg' : 
+            cfg = 1 
+            break 
+   
 
 atoms , bonds = atoms_bonds()
 angles = get_angles(atoms)
@@ -16,6 +32,22 @@ ureys = get_ureys(angles)
 impropers = get_impropers(atoms)
 symmetries = get_symmetries(atoms)
 nat = len(atoms)
+
+nosymm = 0
+if cfg : 
+    sf= open('cfg')
+    for line in sf : 
+        if not '#' in line : 
+            if 'nosymmetry' in line : 
+                nosymm = 1
+                break    
+    sf.close()
+
+if nosymm : 
+    symmetries = {i:[] for i in atoms}
+    
+
+
 
 sf = open(hessf)
 #____________________________________________________________________________
@@ -32,7 +64,7 @@ else :
     scale = 1
 scale = scale**2
 
-print ('The scaling factor {} will be used'.format(scale))
+print ( 'The scaling factor {} will be used'.format(scale) )
 
 #____________________________________________________________________________
 # total charge
@@ -161,8 +193,8 @@ L = {i:{j:0 for j in b[i]} for i in b}
 # {V} : the eigenvectors
 V = {i:{j:0 for j in b[i]} for i in b}   
 
-print ('\nThe following atom-atom interactions has been found to be unstable,')
-print ('so the associated force constants will not be provided')
+print ( '\nThe following atom-atom interactions has been found to be unstable,' )
+print ( 'so the associated force constants will not be provided' )
 unstable = []
 for stick in stick_list : 
     [i,j] = stick
@@ -171,19 +203,18 @@ for stick in stick_list :
     if L[i][j] and L[j][i] : 
         V[i][j] = eigenvec(H[i][j],L[i][j]) 
         V[j][i] = eigenvec(H[j][i],L[j][i])
-    else:
-        print  (i , j)
+    else:        
         unstable += [stick]
         b[i][j] = 0
         b[j][i] = 0
+        if sorted([i,j]) in bond_list : 
+            print ( sorted([i,j]) )
 
 bond_list = [stick for stick in bond_list if not stick in unstable]
 urey_list = [stick for stick in urey_list if not stick in unstable]
 stick_list = bond_list + urey_list
 b = {i:{j:b[i][j] for j in b[i] if b[i][j]} for i in b}
 B = {i:{j:B[i][j] for j in b[i] if b[i][j]} for i in b}
-
-
 
 
 ####################################################################################################
@@ -200,28 +231,27 @@ def projection(i,j):  # calculates the force constant of a bond by projection me
 
 
 #@@@@@@@@@@@@@@@@@@@@
+print ( '\n\nThe force constant of each individual internal coordinate' )
 bondpars = {}
-print ('\n=======================')
-print ('Bond (atom1, atom2, force constant)')
+print ( '\n\nBond (atom1, atom2, force constant)' )
 for a in bonds:  
     [i,j] = bonds[a]['num']
     f1 , f2 = projection(i,j) , projection(j,i)   
     fp = scale*(f1+f2)/4
-    print (i , '\t' , j , '\t' , round(fp,2)    )
+    print ( i , '\t' , j , '\t' , round(fp,2) )    
     bondpars[a] = [i , j , fp , b[i][j]]
     #system ('perl hesspl '  + hessf + ' ' + str(i) + ' ' + str(j))
     #system ('perl hesso.pl ' + hessf + ' ' + str(i) + ' ' + str(j))
 
 ureypars = {}
-print()
-print ('=====================')
-print ('Urey-Bradley (atom1, atom2, force constant)')
+print ()
+print ( '\n\nUrey-Bradley (atom1, atom2, force constant)' )
 for u in ureys:  
     [i,j] = ureys[u]['num']    
     if L[i][j] and L[j][i] : 
         f1 , f2 = projection(i,j) , projection(j,i)   
         fp = scale*(f1+f2)/4
-        print (i , '\t' , j , '\t' , round(fp,2))
+        print ( i , '\t' , j , '\t' , round(fp,2) )
         ureypars[u] = [i , j , fp , b[i][j]]
 
 ####################################################################################################
@@ -246,7 +276,7 @@ def projection(i,j,k):  # calculates the force constant of a bond by projection 
     f2 = 1/(fi+fk)
     
     f = (f1+f2)/4
-    #print f1  # printing f1 is verified by hess2ff.pl
+    #print ( f1  # print (ing f1 is verified by hess2ff.pl
     return f
 
 def factor(i,j,k) : 
@@ -274,14 +304,12 @@ def factor(i,j,k) :
 
 
 anglepars = {}
-print()
-print()
-print ('==============================')
-print ('angles (atom1   atom2   atom3   force constant)')
+print ()
+print ( '\n\nAngles (atom1   atom2   atom3   force constant)' )
 for a in angles :
     [i,j,k] = angles[a]['num']
     fp = scale * projection(i,j,k)
-    print (i , '\t' , j , '\t' , k , '\t' , round(fp,2))
+    print ( i , '\t' , j , '\t' , k , '\t' , round(fp,2) )
     anglepars[a] = [i , j , k , fp , angles[a]['v']]
 
 
@@ -315,16 +343,12 @@ def projection(i,j,k,l):  # calculates the force constant of a bond by projectio
 
 #@@@@@@@@@@@@@@@@@@@@
 improperpars = {}
-print()
-print()
-print ('======================================')
-print ('Impropers (atom1   atom2   atom3   atom4   force constant)')
+print ( '\n\nImpropers (atom1   atom2   atom3   atom4   force constant)' )
 for m in impropers :
     [i,j,k,l] = impropers[m]['num']
     f = scale * projection(i,j,k,l)
-    print (i , '\t' , j , '\t' , k , '\t' , l , '\t', round(f,2))
+    print ( i , '\t' , j , '\t' , k , '\t' , l , '\t', round(f,2) )
     improperpars[m] = [i,j,k,l,f,0]
-print ('======================================')
 #===================================================================================================
 
 ### equivalencing the parameters
@@ -334,7 +358,7 @@ def equivalents(ics,icpars) :
     for b in icpars :
         if not b in pool :
             if len(equics[b]) > 1 : 
-                print ([ics[q]['num'] for q in equics[b]])
+                print ( [ics[q]['num'] for q in equics[b]] )
             n = len(equics[b])
             avf = sum([icpars[q][-2] for q in equics[b]])/n
             avd = sum([icpars[q][-1] for q in equics[b]])/n
@@ -343,15 +367,15 @@ def equivalents(ics,icpars) :
                 icpars[q][-2] = avf
                 icpars[q][-1] = avd
     return icpars
-print ('\nThe following bonds were forund to be equivalent')
+print ( '\nThe program equivalencing scheme has detected the following equivalent bonds' )
 bondpars = equivalents(bonds,bondpars)
-print ('\nThe following Urey-Bradley interactions were forund to be equivalent')
+print ( '\nThe program equivalencing scheme has detected the following equivalent Urey-Bradley interactions' )
 ureypars = equivalents(ureys,ureypars)
-print ('\nThe following angles were forund to be equivalent')
+print ( '\nThe program equivalencing scheme has detected the following equivalent angles' )
 anglepars = equivalents(angles,anglepars)
-print ('\nThe following improper angles were forund to be equivalent')
+print ( '\nThe program equivalencing scheme has detected the following equivalent improper angles' )
 improperpars = equivalents(impropers,improperpars)
-print ('\nThe equivalences will be considered in the output parameter file')
+print ( '\nThe equivalences will be considered in the output parameter file' )
 
 ### writing the parameters in a temporary output file 
 tf = open('tempars','a')
@@ -374,7 +398,11 @@ for m in improperpars :
     
 tf.close()
 
-print ('\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> .. Harmonic parameterization is completed successfully \n\n\n\n')
+
+print () 
+print ( 'Harmonic parameterization is done  _______________________________________________' )
+print ( '__________________________________________________________________________________' )
 
 
-
+tf = open('hessdone','w')
+tf.close()

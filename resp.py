@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-
 ####=================================================================================================
 #      ________      ________      ________       ________
 #      \  ____ \     \  _____\     \  _____\      \  ____ \
@@ -12,7 +11,11 @@
 #            \_\ \_\       \_______\     \______\       \_\
 #
 ####=================================================================================================
-print ('\n\n\nCharge fitting .. >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n')
+print ( '\n\n' )
+print ( '__________________________________________________________________________________' )
+print ( 'Charge Fitting   _________________________________________________________________' )
+print ()
+
 from os import system
 import sys
 from functions import *
@@ -20,27 +23,30 @@ from functions import *
 #==========================================================================
 #==========================================================================
 
-print ('STEP: extracting the input data for RESP')
-
-#espf = sys.argv[1]
+espf = sys.argv[1]
+cfg = sys.argv[-1]
+if cfg == '0' : 
+    cfg = 0
+'''
 espf = 'nma.esp'
+cfg = 'cfg'
+'''
+
+print ( '\nThe Electrostatic Potential file: {}  was detected\n'.format(espf) )
+
+print ( 'STEP: extracting the input data for RESP' )
+
 
 atoms , bonds = atoms_bonds()
 nat = len(atoms)
 uniqs = {i:[] for i in atoms}
-if bonds: 
+if atoms: 
     uniqs = get_symmetries(atoms)
-    print()
-    print ('The program equivalencing scheme has detected the following equivalent charge centers ')
-    for i in uniqs :
-        if uniqs[i] : 
-            eq = [i] + uniqs[i]
-            print (eq)
+nat = len(atoms)
 
 
 ## extracting the cartesian coordinate of the charge centers and the ESP points and the electrostatic potential  
 sf = open(espf)
-
 for line in sf : 
     if 'Charge =' in line : 
         Q = float(line.split()[2])
@@ -74,7 +80,7 @@ for line in sf :
                 esp += [float(line[2])]
             elif 'Axes restored to original set' in line:
                 break
-print ('{} electrostatic potential points has been deteted\n'.format(len(esp)))
+print ( '\n{} electrostatic potential points has been deteted\n'.format(len(esp)) )
 sf.close()
 
 
@@ -83,32 +89,50 @@ sf.close()
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-sf = open('cfg')
+
 equic = []
 frozen = {}
 frozeng = []
 keep = []
-for line in sf :
-    if not line.startswith('#') :
-        line = line.split()
-        n = len(line)
-        if n > 1 : 
-            if 'fc' in line : 
-                frozen[int(line[1])] = float(line[2])
-            elif 'gc' in line : 
-                line = line[1:]
-                frozeng += [[int(i) for i in line[:-1]] + [float(line[-1])]]
-            elif 'ec' in line and n > 2: 
-                line = line[1:]
-                equic += [sorted([int(i) for i in line])]
-            elif 'kc' in line :
-                line = line[1:]
-                keep = [int(i) for i in line]
-
-sf.close()
+nosymm = 0
+if cfg : 
+    sf = open('cfg')
+    for line in sf :
+        if not line.startswith('#') :
+            if 'nosymmetry' in line : 
+                nosymm = 1
+            line = line.split()
+            n = len(line)
+            if n > 1 : 
+                if 'fc' in line : 
+                    frozen[int(line[1])] = float(line[2])
+                elif 'gc' in line : 
+                    line = line[1:]
+                    frozeng += [[int(i) for i in line[:-1]] + [float(line[-1])]]
+                elif 'ec' in line and n > 2: 
+                    line = line[1:]
+                    equic += [sorted([int(i) for i in line])]
+                elif 'kc' in line :
+                    line = line[1:]
+                    keep = [int(i) for i in line]
+    
+    sf.close()
 frozeng += [[i for i in atoms] + [Q]]
 
 sf.close()
+
+
+if nosymm : 
+    uniqs = {i:[] for i in atoms}
+ 
+print ()
+print ( 'The program equivalencing scheme has detected the following equivalent charge centers ' )
+for i in uniqs :
+    if uniqs[i] : 
+        eq = [i] + uniqs[i]
+        print ( eq )
+print ( '\n' )
+   
 
 #!!!!! here we need to define the methyl hydrogen because it should be allowed for fitting in the second stage 
 
@@ -157,11 +181,11 @@ frozeng = [[i for i in atoms] + [Q]]
 # they are provided as successive lines of 'atom1  atom2  atom3 ... charge' like
 # 1 2 0.2596
 # 1 3 4 -0.154875
-# the total charge as the sum of all charges is the default element iprint 'equivalent = ' , equic
-print 
-print 'frozen charges = ' , frozen
-print 
-print 'group charges = ' , frozengn the frozengroups  
+# the total charge as the sum of all charges is the default element iprint ( 'equivalent = ' , equic
+print ( 
+print ( 'frozen charges = ' , frozen
+print ( 
+print ( 'group charges = ' , frozengn the frozengroups  
 '''
 def modcons (samc , symm , froz , frozg) :
     # modefying the constraints if ther is any of cnflicts or additional equivalences
@@ -179,12 +203,12 @@ def modcons (samc , symm , froz , frozg) :
                     symm[k] = ks
                     symm[i] = []
                     symm[j] = []
-                    print ('the equivalence between the charge centers {} and {} is disabled to keep them frozen'.format(i,j))
+                    print ( 'the equivalence between the charge centers {} and {} is disabled to keep them frozen'.format(i,j) )
                 else : 
                     for k in symm : 
                         if i in symm[k] and j in symm[k] : 
                             symm[k] = [a for a in symm[k] if not a in [i,j]]
-                            print ('the equivalence between the charge centers {} and {} is disabled to keep them frozen'.format(i,j))
+                            print ( 'the equivalence between the charge centers {} and {} is disabled to keep them frozen'.format(i,j) )
                             break 
 
 
@@ -195,7 +219,7 @@ def modcons (samc , symm , froz , frozg) :
         z = [i for i in g if i in froz]
         if len(z) == len(g) : 
             frozg.remove(f)
-            print ('The frozen group charge {} is disabled to keep its individual frozen charge centers in effect'.format(f))
+            print ( 'The frozen group charge {} is disabled to keep its individual frozen charge centers in effect'.format(f) )
 
 
     ### disabeling the equivalence of the unequal frozen groups 
@@ -210,7 +234,7 @@ def modcons (samc , symm , froz , frozg) :
         for j in frozgi :
             if j > i and len(i) == len(j) and i[-1] != j[-1] : 
                 if equigroups(i,j) :
-                    print ('The equivalences within the group charges {} and {} are disabled to keep the frozen group charges in effect'.format(i,j))
+                    print ( 'The equivalences within the group charges {} and {} are disabled to keep the frozen group charges in effect'.format(i,j) )
                     for s in symm : 
                         sij = intercept(i , [s]+symm[s]) + intercept(j , [s]+symm[s]) 
                         m = min([k for k in [s]+symm[s] if not k in sij])
@@ -257,7 +281,7 @@ def modcons (samc , symm , froz , frozg) :
 #______________________________________________________________________________
 ### preparing A and B to solve Aq = B for q
 
-print ('STEP: input data processing ')
+print ( 'STEP: input data processing ' )
 def distesp(i,j) :  return 1/dist(acc[i],ecc[j])
 def dod (v,w): return sum([v[i]*w[i] for i in v])
 nesp = len(esp)
@@ -392,10 +416,10 @@ def fit(A0,B0,qi,sym,froz,s):
         qf = qall(qf,sym,froz)
         conv = sqrt(sum([(qo[i-1]-qf[i-1])**2 for i in atoms]))/nq        
         if  conv < 1e-5 :
-            print ('resp fitting has converged in  '  , step+1 , ' iterations'       )
+            print ( 'resp fitting has converged in  '  , step+1 , ' iterations' )       
             return qf
         elif step == 100 :
-            print ('no convergence after '  , step+1 , ' iterations')
+            print ( 'no convergence after '  , step+1 , ' iterations' )
             return qf 
         else :
             qo = [q for q in qf]
@@ -410,15 +434,15 @@ def fit(A0,B0,qi,sym,froz,s):
 # first stage
 # frozen atoms and frozen groups are in effect 
 # equics and symmetry are in effect
-print ('\nSTEP: first stage fitting')
+print ( '\nSTEP: first stage fitting' )
 symm = {i:[] for i in atoms}
 samc = []
 froz = {i:frozen[i] for i in frozen}
 
 if froz : 
-    print()
-    print ('According to the configuration file, the following atoms are frozen ')
-    print (froz)
+    print ()
+    print ( 'According to the configuration file, the following atoms are frozen ' )
+    print ( froz )
 
 symm , froz , frozg , nfrozg = modcons (samc , symm , froz , frozeng)
 
@@ -438,7 +462,7 @@ qf = fit (A0,B0,q0,symm,frozen,0.0005)
 # second stage
 # all constraints are in effect
 # all atoms except H and C are frozen in this stage
-print ('\nSTEPsecond stage fitting')
+print ( '\nSTEP: second stage fitting' )
 symm = uniqs
 samc = [s for s in equic]
 froz = {i:qf[i-1] for i in atoms if i in frozen or i in keep or not (atoms[i]['a'] == 'C' or atoms[i]['con'] == 'HC')}  # make sure whether methyl 
@@ -449,38 +473,48 @@ A0 , B0 , symm  = A0B0 (A0 , B0 , frozeng , symm)
 qf = fit (A0,B0,qf,symm,froz,0.001)
 
 
-print()
-print ('According to the  the configuration file the program has modified the equivalences to be ')
+print ()
+print ( 'According to the  the configuration file the program has modified the equivalences to be ' )
 for i in symm :
     if symm[i] : 
         eq = [i] + symm[i]
-        print (eq)
+        print ( eq )
 
-print()
-print ('With program modification scheme, the frozen atoms were corrected to be ')
-print (froz)
+print ()
+print ( 'With program modification scheme, the frozen atoms were corrected to be ' )
+print ( froz )
 
-print ('and the frozen group charge were corrected to be ')
+print ( 'and the frozen group charge were corrected to be ' )
 for f in frozg :
-    print (f)
+    print ( f )
 
 
-print()
-print ('The final charges ')
+print ()
+print ( 'The final charges ' )
 k = 1
 for q in qf :
-    print (k , q)
-    
+    print ( k , q )    
     k += 1
-
-print ('\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> .. Charge fitting ended successfully\n\n\n\n')
-
+print () 
 tf = open('tempars','a')
-tf.write('charges   ')
+tf.write('charges ')
 for q in qf :
     tf.write(str(round(q,4)) + '   ')
 tf.write('\n')
 tf.close()
 
+'''
+tf = open('charges.txt','w')
+for q in qf :
+    tf.write(str(round(q,4)) + '   ')
+tf.write('\n')
+tf.close()
+'''
+
+print ()
+print ( 'Charge Fitting is done  __________________________________________________________' )
+print ( '__________________________________________________________________________________' )
 
 
+tf = open('espdone','w')
+tf.close()

@@ -394,12 +394,18 @@ def get_impropers(atoms) :
     impropers = {}
     m = 1
     for i in atoms :
-        if atoms[i]['a'] == 'C' and  atoms[i]['ncon'] == 3 :
-            k = atoms[i]['cona']
+        k = atoms[i]['cona']
+        if atoms[i]['a'] == 'C' and atoms[i]['ncon'] == 3 :            
             for j in range (3) :
-                if atoms[k[j]]['a'] == 'O' and atoms[i]['ord'][k[j]] == 2 :
+                if atoms[k[j]]['a'] in ['O','S','N','N+'] and atoms[i]['ord'][k[j]] == 2 :
                     impropers[m] = {}
                     impropers[m]['num'] = [i] + k
+                elif atoms[k[j]]['a'] == 'C' and ('O' in atoms[k[j]]['con']  or 'N' in atoms[k[j]]['con']  ) : 
+                    impropers[m] = {}
+                    impropers[m]['num'] = [i] + k
+        elif atoms[i]['a'] == 'N+' and atoms[i]['ncon'] == 3 and atoms[i]['con'].count('O') == 2: 
+            impropers[m] = {}
+            impropers[m]['num'] = [i] + k
     return impropers
 
 def get_cycles(atoms,bonds,angles,dihedrals) :
