@@ -1,54 +1,18 @@
 
-# WARNING ::: 
-#         the following keywords are crucial 
-#          so please if you like to write any comments 
-#          let all the lines of your comment start with #  
 
-#____________________________________________________
-#  charge options ___________________________________
 
-# frozen charges 
-fc 
+
 fc 
 
+kmax  10
+maxenergy  20
 
-# group charges 
-gc 1 2 3 4 0.0
-gc 9 10 11 12 0.0
-
-# equivalent charges 
-ec 4 10
-
-# charges to be kept frozen after the first stage   
-kc 8
+!ft 2 1 5 7 1 1 0 
+!ft 5 7 9 10 1 1 0 
+fp 5 7 9 10 1 2 
+fp 2 1 5 7 1 2 
 
 
-#____________________________________________________
-# torsional options _________________________________
-
-qm  1 2 3 4  
-mm  3 4 5 9 
-torsional 1 2 3 4 7 8 9 7  
-torsional 2 3 4 5 8 9 6 3
-torsional 3 4 5 6 0 9 8  
-
-# periodicities (ex: fp 2 1 5 6 1 3)
-fp 2 1 5 6 2
-fp 3 1 5 6 1 
-
-# frozen torsionals (ex: ft 2 1 5 6 3.3 2 0) 
-
-# fitting parameters
-repeat 
-phases  1 
-kmax  5
-maxenergy  15 
-nsteps  5000
-weight c 8 2
-
-
-
- 
 
 
 
